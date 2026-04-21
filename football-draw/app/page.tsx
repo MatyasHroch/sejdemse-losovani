@@ -9,13 +9,28 @@ import type { Draw } from "@/types";
 export default function Page() {
   const [draw, setDraw] = useState<Draw | null>(null);
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const saved = loadDraw();
     if (saved) setDraw(saved);
   }, []);
 
-  function handleLoadAndDraw() {
-    fetchPlayers().then((players) => {
+  async function handleLoadAndDraw() {
+    try {
+      const players = await fetchPlayers();
+
+      if (players.length === 0) {
+        alert("Žádní hráči k dispozici");
+        return;
+      }
+
+      if (players.length === 1) {
+        alert("Na losování je potřeba alespoň 2 hráči");
+        return;
+      }
+
       const teams = createTeams(players);
 
       const newDraw: Draw = {
@@ -27,7 +42,9 @@ export default function Page() {
 
       saveDraw(newDraw);
       setDraw(newDraw);
-    });
+    } catch (e) {
+      alert("Nepodařilo se načíst hráče");
+    }
   }
 
   function handleReshuffle() {
