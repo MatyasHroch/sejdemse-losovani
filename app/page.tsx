@@ -44,7 +44,7 @@ export default function Page() {
     } catch (e) {
       setError("Nepodařilo se načíst hráče");
     } finally {
-      setLoading(false); // 🔑 vždy se vypne
+      setLoading(false); // always stop loading state at the end
     }
   }
 
@@ -175,9 +175,7 @@ export default function Page() {
           >
             🔁 Přerozdělit
           </button>
-
         </div>
-
       </div>
     </div>
   );

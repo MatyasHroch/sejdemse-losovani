@@ -1,12 +1,9 @@
-import { ApiPlayer } from "../types/index";
-// lib/api.ts
+import { EventOccurrence } from "@/types/index";
 
 const CONFIRMATION_STRING = "yes";
 
-// lib/api.ts
-
 export async function fetchPlayers(): Promise<string[]> {
-  // 1. načti event page
+  // load event page
   const res = await fetch(
     "https://api.sejdemse.net/api/teams-page/Fotbal-cajkarna.json",
     { cache: "no-store" },
@@ -16,14 +13,14 @@ export async function fetchPlayers(): Promise<string[]> {
 
   const data = await res.json();
 
-  // 2. vezmi upcomingOccurrence ID
+  // get the first event's first upcoming occurrence ID
   const occurrenceId = data?.events?.[0]?.upcomingOccurrence?.id;
 
   if (!occurrenceId) {
     throw new Error("No upcoming occurrence found");
   }
 
-  // 3. načti detail konkrétního termínu
+  // load specific occurrence details
   const occRes = await fetch(
     `https://api.sejdemse.net/api/event_occurrences/${occurrenceId}.json`,
     { cache: "no-store" },
@@ -33,7 +30,7 @@ export async function fetchPlayers(): Promise<string[]> {
 
   const occData = await occRes.json();
 
-  // 4. extract hráčů
+  // extract and return player names who confirmed attendance
   return extractPlayers(occData);
 }
 
