@@ -78,6 +78,18 @@ export default function Page() {
           </p>
         </div>
 
+        {draw?.date && (
+          <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-white/50">
+            ⏱️ Hráči naposledy načteni:{" "}
+            <span className="text-white/70">
+              {new Date(draw.date).toLocaleString("cs-CZ", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
+            </span>
+          </div>
+        )}
+
         {/* ERROR */}
         {error && (
           <div className="bg-red-500/10 border border-red-500/40 text-red-300 px-4 py-3 rounded-xl">
@@ -113,7 +125,7 @@ export default function Page() {
             {/* TEAM A */}
             <div className="rounded-2xl p-4 border border-red-500/30 bg-red-500/10">
               <h3 className="font-bold text-red-300 mb-1">
-                🔴 Tým A
+                🔴 Tým Červená
               </h3>
               <p className="text-white/70 text-sm">
                 {draw.teamA.join(" • ")}
@@ -123,7 +135,7 @@ export default function Page() {
             {/* TEAM B */}
             <div className="rounded-2xl p-4 border border-green-500/30 bg-green-500/10">
               <h3 className="font-bold text-green-300 mb-1">
-                🟢 Tým B
+                🟢 Tým Zelená
               </h3>
               <p className="text-white/70 text-sm">
                 {draw.teamB.join(" • ")}
