@@ -65,70 +65,107 @@ export default function Page() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Fotbal losování</h1>
+    <div className="min-h-screen bg-[#0b0f14] text-white">
+      <div className="max-w-3xl mx-auto p-6 space-y-6">
 
-      {!draw && (
-        <p className="text-gray-500">
-          Žádné rozlosování není v local storage
-        </p>
-      )}
+        {/* HEADER */}
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black tracking-tight">
+            ⚽ Fotbal losování
+          </h1>
+          <p className="text-white/40 text-sm">
+            Automatické rozdělení týmů
+          </p>
+        </div>
 
-      {draw && (
-        <>
-          <div>
-            <h2 className="font-semibold">Všichni hráči</h2>
-            <p>{draw.allPlayers.join(", ")}</p>
+        {/* ERROR */}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500/40 text-red-300 px-4 py-3 rounded-xl">
+            {error}
           </div>
+        )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-red-100 p-4 rounded">
-              <h3 className="font-bold">Tým A</h3>
-              <p>{draw.teamA.join(", ")}</p>
+        {/* EMPTY STATE */}
+        {!draw && (
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
+            <p className="text-white/40">
+              Žádné rozlosování zatím neexistuje
+            </p>
+          </div>
+        )}
+
+        {/* PLAYERS */}
+        {draw && (
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-4">
+            <h2 className="font-semibold mb-2 text-white/80">
+              👥 Všichni hráči
+            </h2>
+            <p className="text-white/50 text-sm">
+              {draw.allPlayers.join(" • ")}
+            </p>
+          </div>
+        )}
+
+        {/* TEAMS */}
+        {draw && (
+          <div className="space-y-4">
+
+            {/* TEAM A */}
+            <div className="rounded-2xl p-4 border border-red-500/30 bg-red-500/10">
+              <h3 className="font-bold text-red-300 mb-1">
+                🔴 Tým A
+              </h3>
+              <p className="text-white/70 text-sm">
+                {draw.teamA.join(" • ")}
+              </p>
             </div>
 
-            <div className="bg-green-100 p-4 rounded">
-              <h3 className="font-bold">Tým B</h3>
-              <p>{draw.teamB.join(", ")}</p>
+            {/* TEAM B */}
+            <div className="rounded-2xl p-4 border border-green-500/30 bg-green-500/10">
+              <h3 className="font-bold text-green-300 mb-1">
+                🟢 Tým B
+              </h3>
+              <p className="text-white/70 text-sm">
+                {draw.teamB.join(" • ")}
+              </p>
             </div>
+
           </div>
-        </>
-      )}
+        )}
 
-      {error && (
-        <p className="text-red-500 font-semibold">
-          {error}
-        </p>
-      )}
+        {/* BUTTONS */}
+        <div className="flex flex-col sm:flex-row gap-3 pt-2">
 
-      {!draw && (
-        <p className="text-gray-500">
-          Žádné rozlosování není v local storage
-        </p>
-      )}
+          <button
+            onClick={handleLoadAndDraw}
+            disabled={loading}
+            className="
+            flex-1 px-5 py-3 rounded-xl font-bold
+            bg-blue-600 hover:bg-blue-500
+            transition active:scale-[0.98]
+            shadow-lg shadow-blue-600/20
+            disabled:opacity-40 disabled:cursor-not-allowed
+          "
+          >
+            {loading ? "🎲 Načítám..." : "🎲 Načíst hráče a Rozlosovat"}
+          </button>
 
-      {draw && (
-        <>
-          {/* hráči + týmy */}
-        </>
-      )}
+          <button
+            onClick={handleReshuffle}
+            disabled={!draw || loading}
+            className="
+            flex-1 px-5 py-3 rounded-xl font-bold
+            bg-white/10 hover:bg-white/15
+            border border-white/10
+            transition active:scale-[0.98]
+            disabled:opacity-30 disabled:cursor-not-allowed
+          "
+          >
+            🔁 Přerozdělit
+          </button>
 
-      <div className="flex gap-2">
-        <button
-          onClick={handleLoadAndDraw}
-          disabled={loading}
-          className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-        >
-          {loading ? "Načítám..." : "Načíst hráče a rozdělit"}
-        </button>
+        </div>
 
-        <button
-          onClick={handleReshuffle}
-          disabled={!draw}
-          className="px-4 py-2 bg-gray-500 text-white rounded"
-        >
-          Přerozdělit
-        </button>
       </div>
     </div>
   );
