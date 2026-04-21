@@ -18,16 +18,14 @@ export default function Page() {
   }, []);
 
   async function handleLoadAndDraw() {
+    setLoading(true);
+    setError(null);
+
     try {
       const players = await fetchPlayers();
 
       if (players.length === 0) {
-        alert("Žádní hráči k dispozici");
-        return;
-      }
-
-      if (players.length === 1) {
-        alert("Na losování je potřeba alespoň 2 hráči");
+        setError("Žádní hráči k dispozici");
         return;
       }
 
@@ -42,8 +40,11 @@ export default function Page() {
 
       saveDraw(newDraw);
       setDraw(newDraw);
+
     } catch (e) {
-      alert("Nepodařilo se načíst hráče");
+      setError("Nepodařilo se načíst hráče");
+    } finally {
+      setLoading(false); // 🔑 vždy se vypne
     }
   }
 
@@ -94,12 +95,31 @@ export default function Page() {
         </>
       )}
 
+      {error && (
+        <p className="text-red-500 font-semibold">
+          {error}
+        </p>
+      )}
+
+      {!draw && (
+        <p className="text-gray-500">
+          Žádné rozlosování není v local storage
+        </p>
+      )}
+
+      {draw && (
+        <>
+          {/* hráči + týmy */}
+        </>
+      )}
+
       <div className="flex gap-2">
         <button
           onClick={handleLoadAndDraw}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
+          disabled={loading}
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
         >
-          Načíst hráče a rozdělit
+          {loading ? "Načítám..." : "Načíst hráče a rozdělit"}
         </button>
 
         <button
